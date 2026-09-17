@@ -1,4 +1,4 @@
-Enter<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -24,9 +24,15 @@ Enter<!DOCTYPE html>
             <h1 class="text-lg font-black flex items-center gap-2 cursor-pointer tracking-wide" onclick="goHome()">
                 🎯 لمسة تميّز
             </h1>
-            <div class="flex gap-1.5 bg-white/10 p-1 rounded-2xl backdrop-blur-md">
-                <button onclick="switchMainView('progress')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition hover:bg-white/20">📊 التقدم</button>
-                <button onclick="switchMainView('subjects')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition hover:bg-white/20">📚 المواد</button>
+            <div class="flex items-center gap-2">
+                <div class="flex gap-1.5 bg-white/10 p-1 rounded-2xl backdrop-blur-md">
+                    <button onclick="switchMainView('progress')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition hover:bg-white/20">📊 التقدم</button>
+                    <button onclick="switchMainView('subjects')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition hover:bg-white/20">📚 المواد</button>
+                </div>
+                <!-- زر دخول المدير -->
+                <button onclick="toggleAdminMode()" id="admin-toggle-btn" class="bg-white/20 hover:bg-white/30 p-2 rounded-xl text-xs font-bold transition" title="لوحة المدير">
+                    🔒
+                </button>
             </div>
         </div>
     </header>
@@ -37,18 +43,19 @@ Enter<!DOCTYPE html>
         <div id="view-main-container">
             <!-- قائمة المواد -->
             <div id="view-subjects" class="space-y-4">
-                <div class="glass-card p-5 rounded-3xl shadow-sm border border-slate-100">
-                    <h2 class="text-xs font-bold text-indigo-600 mb-2 uppercase tracking-wider">إدارة المنهاج (من السحابة)</h2>
+                <!-- خانة إضافة مادة (تظهر للمدير فقط) -->
+                <div id="admin-add-subject-box" class="hidden glass-card p-5 rounded-3xl shadow-sm border border-amber-200 bg-amber-50/40">
+                    <h2 class="text-xs font-bold text-amber-700 mb-2 uppercase tracking-wider">🔒 لوحة التحكم (خاص بالمدير)</h2>
                     <div class="flex gap-2">
-                        <input type="text" id="subject-name-input" placeholder="اسم المادة الجديدة (مثال: رياضيات)..." class="flex-1 px-4 py-3 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs bg-slate-50">
-                        <button onclick="addSubject()" class="bg-indigo-600 text-white px-5 py-3 rounded-2xl font-bold text-xs hover:bg-indigo-700 transition shadow-lg shadow-indigo-200">إضافة</button>
+                        <input type="text" id="subject-name-input" placeholder="اسم المادة الجديدة (مثال: رياضيات)..." class="flex-1 px-4 py-3 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xs bg-white">
+                        <button onclick="addSubject()" class="bg-indigo-600 text-white px-5 py-3 rounded-2xl font-bold text-xs hover:bg-indigo-700 transition shadow-lg shadow-indigo-200">إضافة مادة</button>
                     </div>
                 </div>
 
                 <div>
-                    <h2 class="text-sm font-black text-slate-800 mb-3 px-1">المواد الدراسية السحابية</h2>
+                    <h2 class="text-sm font-black text-slate-800 mb-3 px-1">المواد الدراسية</h2>
                     <div id="subjects-list" class="space-y-3">
-                        <div class="text-center py-6 text-slate-400 glass-card rounded-3xl text-xs">جاري تحميل البيانات من السحابة...</div>
+                        <div class="text-center py-6 text-slate-400 glass-card rounded-3xl text-xs">جاري تحميل البيانات...</div>
                     </div>
                 </div>
             </div>
@@ -59,10 +66,11 @@ Enter<!DOCTYPE html>
                     <button onclick="goBackToSubjects()" class="text-indigo-600 font-bold text-xs hover:underline flex items-center gap-1">← المواد</button>
                     <h2 id="current-subject-title" class="text-xs font-black text-slate-800"></h2>
                 </div>
-                <div class="glass-card p-4 rounded-3xl shadow-sm border border-slate-100">
-                    <h3 class="text-xs font-bold text-slate-700 mb-2">إضافة بحث جديد</h3>
+                <!-- إضافة بحث (للمدير فقط) -->
+                <div id="admin-add-research-box" class="hidden glass-card p-4 rounded-3xl shadow-sm border border-amber-200 bg-amber-50/40">
+                    <h3 class="text-xs font-bold text-amber-700 mb-2">إضافة بحث جديد (للمدير)</h3>
                     <div class="flex gap-2">
-                        <input type="text" id="research-name-input" placeholder="اسم البحث (مثال: النهايات)..." class="flex-1 px-3.5 py-2.5 rounded-2xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50">
+                        <input type="text" id="research-name-input" placeholder="اسم البحث..." class="flex-1 px-3.5 py-2.5 rounded-2xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
                         <button onclick="addResearch()" class="bg-indigo-600 text-white px-4 py-2.5 rounded-2xl font-bold text-xs hover:bg-indigo-700">إضافة</button>
                     </div>
                 </div>
@@ -75,10 +83,11 @@ Enter<!DOCTYPE html>
                     <button onclick="goBackToResearches()" class="text-indigo-600 font-bold text-xs hover:underline">← الأبحاث</button>
                     <h2 id="current-research-title" class="text-xs font-black text-slate-800"></h2>
                 </div>
-                <div class="glass-card p-4 rounded-3xl shadow-sm border border-slate-100">
-                    <h3 class="text-xs font-bold text-slate-700 mb-2">إضافة درس جديد</h3>
+                <!-- إضافة درس (للمدير فقط) -->
+                <div id="admin-add-lesson-box" class="hidden glass-card p-4 rounded-3xl shadow-sm border border-amber-200 bg-amber-50/40">
+                    <h3 class="text-xs font-bold text-amber-700 mb-2">إضافة درس جديد (للمدير)</h3>
                     <div class="flex gap-2">
-                        <input type="text" id="lesson-name-input" placeholder="اسم الدرس..." class="flex-1 px-3.5 py-2.5 rounded-2xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50">
+                        <input type="text" id="lesson-name-input" placeholder="اسم الدرس..." class="flex-1 px-3.5 py-2.5 rounded-2xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
                         <button onclick="addLesson()" class="bg-indigo-600 text-white px-4 py-2.5 rounded-2xl font-bold text-xs hover:bg-indigo-700">إضافة</button>
                     </div>
                 </div>
@@ -99,20 +108,23 @@ Enter<!DOCTYPE html>
                 </div>
 
                 <div class="glass-card p-5 rounded-3xl shadow-sm border border-slate-100">
+                    <!-- تبويب المحتوى (الاستيراد للمدير، والمعاينة للجميع) -->
                     <div id="lesson-tab-import" class="space-y-4">
-                        <div>
-                            <h3 class="font-bold text-slate-700 text-xs mb-1">استيراد الأسئلة والبطاقات دفعة واحدة</h3>
-                            <p class="text-[11px] text-slate-400 leading-relaxed bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                                • بطاقة: <code class="text-indigo-600 font-mono">السؤال؟ | الجواب.</code><br>
-                                • اختياري: <code class="text-indigo-600 font-mono">السؤال: خيار خطأ / خيار خطأ / الإجابة الصحيحة</code>
-                            </p>
+                        <div id="admin-import-box" class="hidden space-y-4 border-b border-slate-100 pb-4">
+                            <div>
+                                <h3 class="font-bold text-amber-700 text-xs mb-1">🔒 استيراد الأسئلة والبطاقات (للمدير فقط)</h3>
+                                <p class="text-[11px] text-slate-500 leading-relaxed bg-amber-50/50 p-3 rounded-2xl border border-amber-100">
+                                    • بطاقة: <code class="text-indigo-600 font-mono">السؤال؟ | الجواب.</code><br>
+                                    • اختياري: <code class="text-indigo-600 font-mono">السؤال: خيار خطأ / خيار خطأ / الإجابة الصحيحة</code>
+                                </p>
+                            </div>
+                            <textarea id="bulk-lesson-input" rows="5" placeholder="الصق محتوى الدرس هنا..." class="w-full p-3.5 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono text-xs bg-white"></textarea>
+                            <button onclick="processBulkLessonImport()" class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-bold text-xs hover:bg-indigo-700 transition shadow-md shadow-indigo-100">حفظ وإضافة للسحابة</button>
                         </div>
-                        <textarea id="bulk-lesson-input" rows="6" placeholder="الصق محتوى الدرس هنا..." class="w-full p-3.5 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono text-xs bg-slate-50"></textarea>
-                        <button onclick="processBulkLessonImport()" class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-bold text-xs hover:bg-indigo-700 transition shadow-md shadow-indigo-100">حفظ وإضافة للسحابة</button>
                         
-                        <div class="border-t border-slate-100 pt-4">
-                            <h4 class="font-bold text-slate-700 text-xs mb-2">العناصر الحالية (<span id="lesson-items-count">0</span>)</h4>
-                            <div id="lesson-items-preview" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+                        <div>
+                            <h4 class="font-bold text-slate-700 text-xs mb-2">عناصر الدرس الحالية (<span id="lesson-items-count">0</span>)</h4>
+                            <div id="lesson-items-preview" class="space-y-2 max-h-64 overflow-y-auto pr-1"></div>
                         </div>
                     </div>
 
@@ -154,7 +166,7 @@ Enter<!DOCTYPE html>
     <!-- Firebase SDK (Version 10) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBEa14tz0eJqDNqdCCA9W40p_wkiD3Y_qk",
@@ -171,6 +183,49 @@ Enter<!DOCTYPE html>
 
         window.db = { subjects: [], examsHistory: JSON.parse(localStorage.getItem('tamayouz_exams_history')) || [] };
         window.currentSubId = null; window.currentResId = null; window.currentLessId = null;
+        
+        // نظام حالة المدير (كلمة المرور الافتتاحية: 2026 - يمكنك تغييرها هنا)
+        window.isAdmin = localStorage.getItem('tamayouz_is_admin') === 'true';
+
+        window.toggleAdminMode = function() {
+            if (window.isAdmin) {
+                if(confirm('هل تريد تسجيل الخروج من وضع المدير؟')) {
+                    window.isAdmin = false;
+                    localStorage.setItem('tamayouz_is_admin', 'false');
+                    alert('تم تسجيل الخروج من وضع المدير.');
+                    location.reload();
+                }
+            } else {
+                const pass = prompt('أدخل كلمة مرور المدير:');
+                if (pass === '2026') { // كلمة المرور الخاصة بك
+                    window.isAdmin = true;
+                    localStorage.setItem('tamayouz_is_admin', 'true');
+                    alert('مرحباً بك أيها المدير! تم تفعيل وضع التعديل.');
+                    location.reload();
+                } else if (pass !== null) {
+                    alert('كلمة المرور غير صحيحة!');
+                }
+            }
+        }
+
+        function updateAdminUI() {
+            const btn = document.getElementById('admin-toggle-btn');
+            if(window.isAdmin) {
+                btn.innerText = "🔓";
+                btn.className = "bg-emerald-500 text-white p-2 rounded-xl text-xs font-bold transition shadow-md";
+                document.getElementById('admin-add-subject-box')?.classList.remove('hidden');
+                document.getElementById('admin-add-research-box')?.classList.remove('hidden');
+                document.getElementById('admin-add-lesson-box')?.classList.remove('hidden');
+                document.getElementById('admin-import-box')?.classList.remove('hidden');
+            } else {
+                btn.innerText = "🔒";
+                btn.className = "bg-white/20 hover:bg-white/30 p-2 rounded-xl text-xs font-bold transition";
+                document.getElementById('admin-add-subject-box')?.classList.add('hidden');
+                document.getElementById('admin-add-research-box')?.classList.add('hidden');
+                document.getElementById('admin-add-lesson-box')?.classList.add('hidden');
+                document.getElementById('admin-import-box')?.classList.add('hidden');
+            }
+        }
 
         async function fetchCloudData() {
             try {
@@ -181,6 +236,7 @@ Enter<!DOCTYPE html>
                 });
                 window.db.subjects = loadedSubjects;
                 renderSubjects();
+                updateAdminUI();
             } catch (err) {
                 console.error("خطأ في جلب البيانات:", err);
                 document.getElementById('subjects-list').innerHTML = `<div class="text-center py-6 text-red-400 text-xs">تأكد من إعدادات الاتصال بـ Firebase</div>`;
@@ -223,12 +279,13 @@ Enter<!DOCTYPE html>
                         <h3 class="font-bold text-slate-800 text-xs group-hover:text-indigo-600 transition">${s.name}</h3>
                         <p class="text-[10px] text-slate-400 mt-0.5">${(s.researches || []).length} أبحاث</p>
                     </div>
-                    <button onclick="event.stopPropagation(); deleteSubject('${s.id}')" class="text-slate-300 hover:text-red-500 p-2 text-xs transition">🗑️</button>
+                    ${window.isAdmin ? `<button onclick="event.stopPropagation(); deleteSubject('${s.id}')" class="text-slate-300 hover:text-red-500 p-2 text-xs transition">🗑️</button>` : ''}
                 </div>
             `).join('');
         }
 
         window.addSubject = async function() {
+            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
             const inp = document.getElementById('subject-name-input');
             if(!inp.value.trim()) return alert('أدخل اسم المادة');
             const subId = 'sub_' + Date.now();
@@ -240,6 +297,7 @@ Enter<!DOCTYPE html>
         }
 
         window.deleteSubject = async function(id) {
+            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
             if(confirm('حذف المادة من السحابة؟')) {
                 await deleteDoc(doc(dbFirestore, "subjects", id));
                 await fetchCloudData();
@@ -270,12 +328,13 @@ Enter<!DOCTYPE html>
                         <h3 class="font-bold text-slate-800 text-xs">${r.name}</h3>
                         <p class="text-[10px] text-slate-400 mt-0.5">${(r.lessons || []).length} دروس</p>
                     </div>
-                    <button onclick="event.stopPropagation(); deleteResearch('${r.id}')" class="text-slate-300 hover:text-red-500 p-2 text-xs">🗑️</button>
+                    ${window.isAdmin ? `<button onclick="event.stopPropagation(); deleteResearch('${r.id}')" class="text-slate-300 hover:text-red-500 p-2 text-xs">🗑️</button>` : ''}
                 </div>
             `).join('');
         }
 
         window.addResearch = async function() {
+            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
             const inp = document.getElementById('research-name-input');
             if(!inp.value.trim()) return alert('أدخل اسم البحث');
             const sub = window.db.subjects.find(s => s.id === window.currentSubId);
@@ -289,6 +348,7 @@ Enter<!DOCTYPE html>
         }
 
         window.deleteResearch = async function(id) {
+            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
             const sub = window.db.subjects.find(s => s.id === window.currentSubId);
             sub.researches = sub.researches.filter(r => r.id !== id);
             await setDoc(doc(dbFirestore, "subjects", window.currentSubId), sub);
@@ -322,12 +382,13 @@ Enter<!DOCTYPE html>
                         <h3 class="font-bold text-slate-800 text-xs">${l.name}</h3>
                         <p class="text-[10px] text-slate-400 mt-0.5">${(l.items || []).length} عنصر</p>
                     </div>
-                    <button onclick="event.stopPropagation(); deleteLesson('${l.id}')" class="text-slate-300 hover:text-red-500 p-2 text-xs">🗑️</button>
+                    ${window.isAdmin ? `<button onclick="event.stopPropagation(); deleteLesson('${l.id}')" class="text-slate-300 hover:text-red-500 p-2 text-xs">🗑️</button>` : ''}
                 </div>
             `).join('');
         }
 
         window.addLesson = async function() {
+            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
             const inp = document.getElementById('lesson-name-input');
             if(!inp.value.trim()) return alert('أدخل اسم الدرس');
             const sub = window.db.subjects.find(s => s.id === window.currentSubId);
@@ -342,6 +403,7 @@ Enter<!DOCTYPE html>
         }
 
         window.deleteLesson = async function(id) {
+            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
             const sub = window.db.subjects.find(s => s.id === window.currentSubId);
             const res = sub.researches.find(r => r.id === window.currentResId);
             res.lessons = res.lessons.filter(l => l.id !== id);
@@ -377,6 +439,7 @@ Enter<!DOCTYPE html>
         }
 
         window.processBulkLessonImport = async function() {
+            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
             const text = document.getElementById('bulk-lesson-input').value.trim();
             if(!text) return alert('أدخل النصوص أولاً');
             const sub = window.db.subjects.find(s => s.id === window.currentSubId);
@@ -429,12 +492,13 @@ Enter<!DOCTYPE html>
             list.innerHTML = items.map((it, i) => `
                 <div class="bg-slate-50/70 p-2.5 rounded-2xl border border-slate-100 flex justify-between items-center text-xs">
                     <span class="font-bold text-slate-700 truncate max-w-[240px]">${i+1}. ${it.type==='mcq' ? '[اختياري] '+it.question : '[بطاقة] '+it.front}</span>
-                    <button onclick="deleteLessonItem(${i})" class="text-slate-300 hover:text-red-500">حذف</button>
+                    ${window.isAdmin ? `<button onclick="deleteLessonItem(${i})" class="text-slate-300 hover:text-red-500">حذف</button>` : ''}
                 </div>
             `).join('');
         }
 
         window.deleteLessonItem = async function(idx) {
+            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
             const sub = window.db.subjects.find(s => s.id === window.currentSubId);
             const res = sub.researches.find(r => r.id === window.currentResId);
             const les = res.lessons.find(l => l.id === window.currentLessId);
