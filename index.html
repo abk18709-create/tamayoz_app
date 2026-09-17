@@ -2,112 +2,617 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>لمسة تميّز 🎯 | المنصة التعليمية الذكية</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة التميز التعليمية 🎯</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Cairo', sans-serif; background: radial-gradient(circle at top right, rgba(79,70,229,.08), transparent 40%), radial-gradient(circle at bottom left, rgba(14,165,233,.07), transparent 40%), #f8fafc; }
-        .glass { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
-        .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.9); }
-        .smooth { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
-        .card-hover:hover { transform: translateY(-3px); box-shadow: 0 14px 35px rgba(15, 23, 42, 0.08); }
-        .hidden-view { display: none !important; }
-        .loader { width: 26px; height: 26px; border: 3px solid rgba(79,70,229,0.2); border-top-color: #4f46e5; border-radius: 50%; animation: spin .7s linear infinite; display: inline-block; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes pulseScale { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
-        .pulse-subtle { animation: pulseScale 3s infinite ease-in-out; }
-        input, textarea, button { font-family: inherit; }
-        textarea { resize: vertical; }
-        .progress-bar { transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
-        ::-webkit-scrollbar { width: 5px; height: 5px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        :root {
+            --primary: #2770a7;
+            --primary-dark: #1b4f77;
+            --accent: #f39c12;
+            --bg-color: #f7f9fc;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-light: #7f8c8d;
+            --success: #27ae60;
+            --danger: #c0392b;
+            --radius: 16px;
+            --shadow: 0 10px 30px rgba(0,0,0,0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 35px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; width: 6px; height: 100%;
+            background: var(--primary);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+            background: #fff;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(39, 112, 167, 0.1);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 112, 167, 0.3);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: var(--text-main);
+        }
+        .btn-secondary:hover {
+            background: #cbd5e1;
+            box-shadow: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .item-card {
+            background: #fff;
+            border: 2px solid #edf2f7;
+            border-radius: 14px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .item-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .question-box {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--primary-dark);
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .option-item {
+            padding: 15px 20px;
+            border: 2px solid #edf2f7;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+
+        .option-item:hover {
+            background: #f1f5f9;
+            border-color: var(--primary);
+        }
+
+        .option-item.selected {
+            background: rgba(39, 112, 167, 0.1);
+            border-color: var(--primary);
+            color: var(--primary-dark);
+        }
+
+        header {
+            background: #fff;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            font-weight: 900;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .stats-badge {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .badge-pill {
+            background: #f1f5f9;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--primary-dark);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
     </style>
 </head>
-<body class="min-h-screen text-slate-800 antialiased selection:bg-indigo-500 selection:text-white">
+<body>
 
-    <!-- ========================================================= شاشة الدخول ========================================================= -->
-    <div id="login-screen" class="min-h-screen flex items-center justify-center px-4 py-8 relative overflow-hidden">
-        <div class="absolute -top-32 -right-32 w-72 h-72 bg-indigo-300/30 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -bottom-32 -left-32 w-72 h-72 bg-blue-300/30 rounded-full blur-3xl pointer-events-none"></div>
-
-        <div class="w-full max-w-md relative z-10">
-            <div class="text-center mb-8 pulse-subtle">
-                <div class="mx-auto w-24 h-24 rounded-[32px] bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 flex items-center justify-center shadow-2xl shadow-indigo-300 text-5xl transform hover:rotate-6 smooth">
-                    🎯
-                </div>
-                <h1 class="text-3xl font-black text-slate-900 mt-5 tracking-tight">لمسة تميّز</h1>
-                <p class="text-xs font-bold text-indigo-600 mt-1">منصتك التفاعلية الذكية للتعلّم والاختبار</p>
-            </div>
-
-            <div class="glass rounded-[32px] shadow-2xl shadow-slate-200/60 border border-white p-6">
-                <!-- اختيار نوع الدخول -->
-                <div class="grid grid-cols-2 gap-2 bg-slate-100/80 p-1.5 rounded-2xl mb-6">
-                    <button id="login-student-tab" onclick="selectLoginType('student')" class="py-3 rounded-xl text-xs font-black bg-white text-indigo-600 shadow-sm smooth">
-                        👨‍🎓 الطالب
-                    </button>
-                    <button id="login-admin-tab" onclick="selectLoginType('admin')" class="py-3 rounded-xl text-xs font-black text-slate-500 smooth">
-                        🔐 المدير
-                    </button>
-                </div>
-
-                <!-- دخول الطالب -->
-                <div id="student-login-box">
-                    <div class="text-center mb-5">
-                        <h2 class="font-black text-base text-slate-800">أهلاً بك يا بطل</h2>
-                        <p class="text-[11px] text-slate-400 mt-0.5">أدخل اسمك الثلاثي للبدء في رحلتك التعليمية</p>
-                    </div>
-                    <label class="block text-[11px] font-bold text-slate-600 mb-2">اسم الطالب الكريم</label>
-                    <div class="relative">
-                        <span class="absolute right-4 top-3.5 text-slate-400">👤</span>
-                        <input id="student-name-input" type="text" placeholder="مثال: أحمد محمد الحسين" class="w-full pr-11 pl-4 py-3.5 rounded-2xl border border-slate-200 bg-white/90 outline-none focus:ring-2 focus:ring-indigo-500 text-xs font-bold shadow-sm" onkeydown="if(event.key==='Enter') studentLogin()">
-                    </div>
-                    <button onclick="studentLogin()" class="w-full mt-4 py-4 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 text-white font-black text-xs shadow-xl shadow-indigo-200 hover:opacity-95 active:scale-[.98] smooth">
-                        دخول المنصة 🚀
-                    </button>
-                </div>
-
-                <!-- دخول المدير -->
-                <div id="admin-login-box" class="hidden-view">
-                    <div class="text-center mb-5">
-                        <h2 class="font-black text-base text-slate-800">لوحة تحكم المدير</h2>
-                        <p class="text-[11px] text-slate-400 mt-0.5">أدخل رمز المرور السري للوصول إلى الإدارة</p>
-                    </div>
-                    <label class="block text-[11px] font-bold text-slate-600 mb-2">كلمة المرور الخاصة</label>
-                    <div class="relative">
-                        <span class="absolute right-4 top-3.5 text-slate-400">🔑</span>
-                        <input id="admin-password-input" type="password" placeholder="••••••••" class="w-full pr-11 pl-4 py-3.5 rounded-2xl border border-slate-200 bg-white/90 outline-none focus:ring-2 focus:ring-emerald-500 text-xs font-bold text-center tracking-[6px] shadow-sm" onkeydown="if(event.key==='Enter') adminLogin()">
-                    </div>
-                    <button onclick="adminLogin()" class="w-full mt-4 py-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black text-xs shadow-xl shadow-emerald-200 hover:opacity-95 active:scale-[.98] smooth">
-                        دخول الإدارة 🔓
-                    </button>
-                </div>
-            </div>
-            <p class="text-center text-[10px] font-bold text-slate-400 mt-6">جميع الحقوق محفوظة © لمسة تميّز 2026</p>
+    <header>
+        <div class="brand">🎯 منصة التميز التعليمية</div>
+        <div id="userBadge" class="hidden stats-badge">
+            <span class="badge-pill">👤 <span id="displayName"></span></span>
+            <span class="badge-pill" style="background: #eef6fc; color: var(--primary);">⚡ نقاط: <span id="userXP">0</span></span>
         </div>
+    </header>
+
+    <div class="container">
+
+        <!-- 1. شاشة تسجيل الدخول (مع مدخل المدير المخفي 2026mmmm) -->
+        <div id="loginScreen" class="card">
+            <h2>أهلاً بك في عالم التميز 🌟</h2>
+            <p>أدخل اسمك الثلاثي للبدء. (للدخول كمدير، اكتب كود الإدارة مكان الاسم).</p>
+            <div class="form-group">
+                <label>اسم الطالب (أو كود المدير):</label>
+                <input type="text" id="studentNameInput" placeholder="اكتب اسمك هنا...">
+            </div>
+            <button class="btn" onclick="handleLogin()">ابدأ رحلة التحدي 🚀</button>
+        </div>
+
+        <!-- 2. لوحة اختيار المواد للطالب -->
+        <div id="studentDashboard" class="card hidden">
+            <h2>اختر المادة للتحدي</h2>
+            <p>اختر مادة وابدأ كسب النقاط ورفع مستواك:</p>
+            <div id="subjectsGrid" class="grid"></div>
+        </div>
+
+        <!-- 3. نافذة كلمة السر للاختبارات المقيدة -->
+        <div id="passwordModal" class="card hidden">
+            <h2>🔒 اختبار محمي بكلمة سر</h2>
+            <p>أدخل كلمة السر المعتمدة من الأستاذ لفتح هذا الاختبار:</p>
+            <div class="form-group">
+                <input type="password" id="quizPasswordInput" placeholder="كلمة السر...">
+            </div>
+            <button class="btn" onclick="verifyQuizPassword()">فتح الاختبار 🔓</button>
+            <button class="btn btn-secondary" style="margin-top: 10px;" onclick="backToDashboard()">إلغاء</button>
+        </div>
+
+        <!-- 4. شاشة الاختبار التفاعلي مع عداد الحماس -->
+        <div id="quizScreen" class="card hidden">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 0.9rem; font-weight: 700; color: var(--text-light);">
+                <span id="quizTitleIndicator">المادة</span>
+                <span>🔥 سلاسل الحماس: <span id="streakCount">0</span> | <span id="questionCounter">السؤال 1</span></span>
+            </div>
+            <div class="question-box" id="questionText">سؤال الاختبار هنا؟</div>
+            <div class="options-list" id="optionsList"></div>
+            <button class="btn" id="nextQuestionBtn" onclick="nextQuestion()" disabled>التالي ➡️</button>
+        </div>
+
+        <!-- 5. شاشة النتيجة الفاخرة والمراجعة الذكية -->
+        <div id="resultScreen" class="card hidden" style="text-align: center;">
+            <h2 id="resultTitle">أحسنت صنعاً! 🏆</h2>
+            <p id="resultScoreText" style="font-size: 1.3rem; font-weight: 700; color: var(--primary); margin: 15px 0;"></p>
+            <div id="reviewContainer" style="text-align: right; margin: 20px 0; max-height: 250px; overflow-y: auto; padding: 10px; background: #f8fafc; border-radius: 10px;"></div>
+            <button class="btn" onclick="backToDashboard()">العودة للمواد وتحدي جديد 🏠</button>
+        </div>
+
+        <!-- 6. لوحة تحكم المدير المتكاملة -->
+        <div id="adminDashboard" class="card hidden">
+            <h2>⚙️ لوحة تحكم المدير</h2>
+            <p>تحكم كامل بإضافة المواد، إعداد كلمات السر، وإدراج الأسئلة بكل مرونة.</p>
+            
+            <div style="margin: 20px 0; border-top: 2px solid #edf2f7; padding-top: 20px;">
+                <h3>إضافة مادة جديدة</h3>
+                <div class="form-group">
+                    <label>اسم المادة:</label>
+                    <input type="text" id="newSubjectName" placeholder="مثال: الجبر والهندسة">
+                </div>
+                <div class="form-group">
+                    <label>كلمة سر الاختبار (اختياري):</label>
+                    <input type="text" id="newSubjectPassword" placeholder="اتركه فارغاً للاختبار المفتوح">
+                </div>
+                <button class="btn" onclick="addSubject()">حفظ المادة الجديدة ➕</button>
+            </div>
+
+            <div style="margin: 20px 0; border-top: 2px solid #edf2f7; padding-top: 20px;">
+                <h3>إضافة سؤال لمادة</h3>
+                <div class="form-group">
+                    <label>اختر المادة:</label>
+                    <select id="adminSubjectSelect"></select>
+                </div>
+                <div class="form-group">
+                    <label>نص السؤال:</label>
+                    <textarea id="adminQuestionText" placeholder="اكتب السؤال..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>الخيار 1:</label>
+                    <input type="text" id="opt1">
+                </div>
+                <div class="form-group">
+                    <label>الخيار 2:</label>
+                    <input type="text" id="opt2">
+                </div>
+                <div class="form-group">
+                    <label>الخيار 3:</label>
+                    <input type="text" id="opt3">
+                </div>
+                <div class="form-group">
+                    <label>رقم الخيار الصحيح (1 أو 2 أو 3):</label>
+                    <input type="number" id="correctOpt" min="1" max="3" value="1">
+                </div>
+                <button class="btn" onclick="addQuestionToSubject()">إضافة السؤال للمادة 📝</button>
+            </div>
+
+            <button class="btn btn-secondary" onclick="logoutAdmin()">تسجيل الخروج 🚪</button>
+        </div>
+
     </div>
 
-    <!-- ========================================================= التطبيق الرئيسي ========================================================= -->
-    <div id="app-screen" class="hidden-view min-h-screen pb-24">
-        <!-- Header -->
-        <header class="sticky top-0 z-50 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 text-white shadow-lg rounded-b-[32px]">
-            <div class="max-w-xl mx-auto px-4 py-3.5">
-                <div class="flex items-center justify-between gap-3">
-                    <button onclick="goHome()" class="text-right flex-1 flex items-center gap-2.5 group">
-                        <div class="w-10 h-10 rounded-2xl bg-white/15 flex items-center justify-center text-xl shadow-inner group-hover:scale-105 smooth">🎯</div>
-                        <div>
-                            <div class="font-black text-sm tracking-wide">لمسة تميّز</div>
-                            <div id="header-user-badge" class="text-[10px] font-bold opacity-90 mt-0.5"></div>
-                        </div>
-                    </button>
-                    <div class="flex items-center gap-2">
-                        <button onclick="switchMainView('progress')" class="px-3.5 py-2 rounded-2xl bg-white/15 hover:bg-white/25 text-[11px] font-bold shadow-sm flex items-center gap-1.5 smooth">
-                            <span>📊</span> تقدمي
-                        </button>
-                        <button onclick="logout()" class="w-10 h-10 rounded-2xl bg-white/15 hover:bg-red-500/80 text-[11px] flex items-center justify-center shadow-sm smooth" title="تسجيل الخروج">
-                            🚪
+    <footer>
+        جميع الحقوق محفوظة منصة التميز التعليمية © 2026 🎯
+    </footer>
+
+    <script>
+        let db = JSON.parse(localStorage.getItem('tamayouz_db')) || {
+            subjects: [
+                {
+                    id: 1,
+                    name: "الرياضيات - العقدية",
+                    password: "",
+                    questions: [
+                        {
+                            text: "ما طويل العدد العقدي z = 3 + 4i ؟",
+                            options: ["5", "7", "25"],
+                            correct: 0
+                        }
+                    ]
+                }
+            ]
+        };
+
+        let currentStudent = "";
+        let userXP = 0;
+        let activeSubjectId = null;
+        let currentQuestionIndex = 0;
+        let selectedOptionIndex = null;
+        let score = 0;
+        let streak = 0;
+        let userAnswersHistory = [];
+
+        function saveDB() {
+            localStorage.setItem('tamayouz_db', JSON.stringify(db));
+        }
+
+        function handleLogin() {
+            const inputVal = document.getElementById('studentNameInput').value.trim();
+            if(!inputVal) {
+                alert('الرجاء كتابة الاسم أو الكود.');
+                return;
+            }
+
+            if(inputVal === "2026mmmm") {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('adminDashboard').classList.remove('hidden');
+                updateAdminSelect();
+                return;
+            }
+
+            currentStudent = inputVal;
+            userXP = parseInt(localStorage.getItem('xp_' + currentStudent)) || 0;
+            document.getElementById('displayName').innerText = currentStudent;
+            document.getElementById('userXP').innerText = userXP;
+            document.getElementById('userBadge').classList.remove('hidden');
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('studentDashboard').classList.remove('hidden');
+            renderSubjects();
+        }
+
+        function renderSubjects() {
+            const grid = document.getElementById('subjectsGrid');
+            grid.innerHTML = "";
+            if(db.subjects.length === 0) {
+                grid.innerHTML = "<p>لا توجد مواد دراسية متاحة حالياً.</p>";
+                return;
+            }
+
+            db.subjects.forEach(sub => {
+                const card = document.createElement('div');
+                card.className = 'item-card';
+                card.innerHTML = `
+                    <div style="font-size: 2rem; margin-bottom: 10px;">📖</div>
+                    <h3 style="margin-bottom: 5px;">${sub.name}</h3>
+                    <p style="font-size: 0.85rem; margin-bottom:0;">${sub.questions.length} أسئلة ${sub.password ? '🔒' : '🔓'}</p>
+                `;
+                card.onclick = () => selectSubject(sub.id);
+                grid.appendChild(card);
+            });
+        }
+
+        function selectSubject(subId) {
+            const sub = db.subjects.find(s => s.id === subId);
+            activeSubjectId = subId;
+
+            if(sub.password && sub.password.trim() !== "") {
+                document.getElementById('studentDashboard').classList.add('hidden');
+                document.getElementById('passwordModal').classList.remove('hidden');
+            } else {
+                startQuiz();
+            }
+        }
+
+        function verifyQuizPassword() {
+            const pass = document.getElementById('quizPasswordInput').value;
+            const sub = db.subjects.find(s => s.id === activeSubjectId);
+            if(pass === sub.password) {
+                document.getElementById('passwordModal').classList.add('hidden');
+                document.getElementById('quizPasswordInput').value = "";
+                startQuiz();
+            } else {
+                alert('كلمة السر غير صحيحة!');
+            }
+        }
+
+        function backToDashboard() {
+            document.getElementById('passwordModal').classList.add('hidden');
+            document.getElementById('quizScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('studentDashboard').classList.remove('hidden');
+            renderSubjects();
+        }
+
+        function startQuiz() {
+            const sub = db.subjects.find(s => s.id === activeSubjectId);
+            if(!sub.questions || sub.questions.length === 0) {
+                alert('عذراً، هذه المادة لا تحتوي على أسئلة بعد.');
+                backToDashboard();
+                return;
+            }
+            currentQuestionIndex = 0;
+            score = 0;
+            streak = 0;
+            userAnswersHistory = [];
+            document.getElementById('studentDashboard').classList.add('hidden');
+            document.getElementById('quizScreen').classList.remove('hidden');
+            document.getElementById('quizTitleIndicator').innerText = sub.name;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const sub = db.subjects.find(s => s.id === activeSubjectId);
+            const q = sub.questions[currentQuestionIndex];
+
+            document.getElementById('questionCounter').innerText = `السؤال ${currentQuestionIndex + 1} من ${sub.questions.length}`;
+            document.getElementById('streakCount').innerText = streak;
+            document.getElementById('questionText').innerText = q.text;
+
+            const optionsList = document.getElementById('optionsList');
+            optionsList.innerHTML = "";
+            selectedOptionIndex = null;
+            document.getElementById('nextQuestionBtn').disabled = true;
+
+            q.options.forEach((opt, idx) => {
+                const optDiv = document.createElement('div');
+                optDiv.className = 'option-item';
+                optDiv.innerText = opt;
+                optDiv.onclick = () => selectOption(idx, optDiv);
+                optionsList.appendChild(optDiv);
+            });
+        }
+
+        function selectOption(idx, element) {
+            document.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedOptionIndex = idx;
+            document.getElementById('nextQuestionBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            const sub = db.subjects.find(s => s.id === activeSubjectId);
+            const q = sub.questions[currentQuestionIndex];
+            const isCorrect = (selectedOptionIndex === q.correct);
+
+            if(isCorrect) {
+                score++;
+                streak++;
+                userXP += 10;
+            } else {
+                streak = 0;
+            }
+
+            userAnswersHistory.push({
+                question: q.text,
+                chosen: q.options[selectedOptionIndex],
+                correctOpt: q.options[q.correct],
+                isCorrect: isCorrect
+            });
+
+            currentQuestionIndex++;
+            if(currentQuestionIndex < sub.questions.length) {
+                loadQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            localStorage.setItem('xp_' + currentStudent, userXP);
+            document.getElementById('userXP').innerText = userXP;
+            document.getElementById('quizScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.remove('hidden');
+
+            const sub = db.subjects.find(s => s.id === activeSubjectId);
+            const percentage = Math.round((score / sub.questions.length) * 100);
+
+            document.getElementById('resultScoreText').innerText = `أنت بطل! نتيجتك: ${score} من ${sub.questions.length} (${percentage}%) | كسبت +${score * 10} نقطة XP!`;
+
+            const reviewContainer = document.getElementById('reviewContainer');
+            reviewContainer.innerHTML = "<h4 style='margin-bottom:10px; color:var(--primary-dark);'>مراجعة إجاباتك:</h4>";
+            
+            userAnswersHistory.forEach((item, idx) => {
+                reviewContainer.innerHTML += `
+                    <div style="font-size:0.9rem; margin-bottom:8px; padding:8px; background:#fff; border-radius:6px; border-right: 4px solid ${item.isCorrect ? 'var(--success)' : 'var(--danger)'};">
+                        <strong>س ${idx+1}:</strong> ${item.question}<br>
+                        إجابتك: ${item.chosen} ${item.isCorrect ? '✅' : '❌ (الصحيح: ' + item.correctOpt + ')'}
+                    </div>
+                `;
+            });
+
+            if(percentage >= 70) {
+                confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+            }
+        }
+
+        function updateAdminSelect() {
+            const select = document.getElementById('adminSubjectSelect');
+            select.innerHTML = "";
+            db.subjects.forEach(sub => {
+                const opt = document.createElement('option');
+                opt.value = sub.id;
+                opt.innerText = sub.name;
+                select.appendChild(opt);
+            });
+        }
+
+        function addSubject() {
+            const name = document.getElementById('newSubjectName').value.trim();
+            const password = document.getElementById('newSubjectPassword').value.trim();
+            if(!name) {
+                alert('أدخل اسم المادة');
+                return;
+            }
+            db.subjects.push({ id: Date.now(), name, password, questions: [] });
+            saveDB();
+            updateAdminSelect();
+            document.getElementById('newSubjectName').value = "";
+            document.getElementById('newSubjectPassword').value = "";
+            alert('تمت إضافة المادة بنجاح!');
+        }
+
+        function addQuestionToSubject() {
+            const subId = document.getElementById('adminSubjectSelect').value;
+            const text = document.getElementById('adminQuestionText').value.trim();
+            const o1 = document.getElementById('opt1').value.trim();
+            const o2 = document.getElementById('opt2').value.trim();
+            const o3 = document.getElementById('opt3').value.trim();
+            const correct = parseInt(document.getElementById('correctOpt').value) - 1;
+
+            if(!subId || !text || !o1 || !o2) {
+                alert('الرجاء تعبئة بيانات السؤال وخيارين على الأقل.');
+                return;
+            }
+
+            const sub = db.subjects.find(s => s.id == subId);
+            sub.questions.push({ text, options: [o1, o2, o3].filter(o => o !== ""), correct });
+            saveDB();
+            document.getElementById('adminQuestionText').value = "";
+            document.getElementById('opt1').value = "";
+            document.getElementById('opt2').value = "";
+            document.getElementById('opt3').value = "";
+            alert('تم إدراج السؤال بنجاح!');
+        }
+
+        function logoutAdmin() {
+            document.getElementById('adminDashboard').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('studentNameInput').value = "";
+        }
+    </script>
+</body>
+</html>
                         </button>
                     </div>
                 </div>
