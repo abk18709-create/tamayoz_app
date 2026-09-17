@@ -3,17 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لمسة تميّز 🎯</title>
+    <title>لمسة تميّز 🎯 - المنصة التفاعلية</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Cairo', sans-serif; background: #f8fafc; }
         .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
-        .flashcard { perspective: 1000px; }
-        .flashcard-inner { transition: transform 0.6s; transform-style: preserve-3d; }
-        .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
-        .flashcard-front, .flashcard-back { backface-visibility: hidden; }
-        .flashcard-back { transform: rotateY(180deg); }
     </style>
 </head>
 <body class="text-slate-800 min-h-screen pb-16">
@@ -43,7 +38,6 @@
         <div id="view-main-container">
             <!-- قائمة المواد -->
             <div id="view-subjects" class="space-y-4">
-                <!-- خانة إضافة مادة (تظهر للمدير فقط) -->
                 <div id="admin-add-subject-box" class="hidden glass-card p-5 rounded-3xl shadow-sm border border-amber-200 bg-amber-50/40">
                     <h2 class="text-xs font-bold text-amber-700 mb-2 uppercase tracking-wider">🔒 لوحة التحكم (خاص بالمدير)</h2>
                     <div class="flex gap-2">
@@ -66,7 +60,6 @@
                     <button onclick="goBackToSubjects()" class="text-indigo-600 font-bold text-xs hover:underline flex items-center gap-1">← المواد</button>
                     <h2 id="current-subject-title" class="text-xs font-black text-slate-800"></h2>
                 </div>
-                <!-- إضافة بحث (للمدير فقط) -->
                 <div id="admin-add-research-box" class="hidden glass-card p-4 rounded-3xl shadow-sm border border-amber-200 bg-amber-50/40">
                     <h3 class="text-xs font-bold text-amber-700 mb-2">إضافة بحث جديد (للمدير)</h3>
                     <div class="flex gap-2">
@@ -83,7 +76,6 @@
                     <button onclick="goBackToResearches()" class="text-indigo-600 font-bold text-xs hover:underline">← الأبحاث</button>
                     <h2 id="current-research-title" class="text-xs font-black text-slate-800"></h2>
                 </div>
-                <!-- إضافة درس (للمدير فقط) -->
                 <div id="admin-add-lesson-box" class="hidden glass-card p-4 rounded-3xl shadow-sm border border-amber-200 bg-amber-50/40">
                     <h3 class="text-xs font-bold text-amber-700 mb-2">إضافة درس جديد (للمدير)</h3>
                     <div class="flex gap-2">
@@ -101,36 +93,42 @@
                     <h2 id="current-lesson-title" class="text-xs font-black text-slate-800"></h2>
                 </div>
 
-                <div class="grid grid-cols-3 gap-2 glass-card p-2 rounded-3xl shadow-sm border border-slate-100 text-center">
-                    <button onclick="switchLessonTab('import')" id="l-tab-import" class="py-2.5 rounded-2xl font-bold text-xs transition bg-indigo-50 text-indigo-600 shadow-sm">المحتوى</button>
-                    <button onclick="switchLessonTab('flashcards')" id="l-tab-flashcards" class="py-2.5 rounded-2xl font-bold text-xs transition text-slate-500 hover:bg-slate-50">البطاقات</button>
-                    <button onclick="switchLessonTab('mcq')" id="l-tab-mcq" class="py-2.5 rounded-2xl font-bold text-xs transition text-slate-500 hover:bg-slate-50">الاختبار</button>
+                <div class="grid grid-cols-2 gap-2 glass-card p-2 rounded-3xl shadow-sm border border-slate-100 text-center">
+                    <button onclick="switchLessonTab('manage')" id="l-tab-manage" class="py-2.5 rounded-2xl font-bold text-xs transition bg-indigo-50 text-indigo-600 shadow-sm">إدارة الأسئلة</button>
+                    <button onclick="switchLessonTab('mcq')" id="l-tab-mcq" class="py-2.5 rounded-2xl font-bold text-xs transition text-slate-500 hover:bg-slate-50">بدء الاختبار 🚀</button>
                 </div>
 
                 <div class="glass-card p-5 rounded-3xl shadow-sm border border-slate-100">
-                    <div id="lesson-tab-import" class="space-y-4">
-                        <div id="admin-import-box" class="hidden space-y-4 border-b border-slate-100 pb-4">
-                            <div>
-                                <h3 class="font-bold text-amber-700 text-xs mb-1">🔒 استيراد الأسئلة والبطاقات (للمدير فقط)</h3>
-                                <p class="text-[11px] text-slate-500 leading-relaxed bg-amber-50/50 p-3 rounded-2xl border border-amber-100">
-                                    • بطاقة: <code class="text-indigo-600 font-mono">السؤال؟ | الجواب.</code><br>
-                                    • اختياري: <code class="text-indigo-600 font-mono">السؤال: خيار خطأ / خيار خطأ / الإجابة الصحيحة</code>
-                                </p>
+                    <!-- تبويب إدارة وإضافة الأسئلة (المباشرة والمجمعة) -->
+                    <div id="lesson-tab-manage" class="space-y-4">
+                        <div id="admin-add-question-direct" class="hidden space-y-3 border-b border-slate-100 pb-4">
+                            <h3 class="font-bold text-amber-700 text-xs">✨ إضافة سؤال اختياري جديد فوراً</h3>
+                            <input type="text" id="dir-q-text" placeholder="نص السؤال..." class="w-full p-3 rounded-2xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="text" id="dir-opt-1" placeholder="الخيار الأول (خطأ مثلاً)" class="p-2.5 rounded-xl border border-slate-200 text-xs bg-white">
+                                <input type="text" id="dir-opt-2" placeholder="الخيار الثاني (خطأ مثلاً)" class="p-2.5 rounded-xl border border-slate-200 text-xs bg-white">
+                                <input type="text" id="dir-opt-3" placeholder="الخيار الثالث (خطأ مثلاً)" class="p-2.5 rounded-xl border border-slate-200 text-xs bg-white">
+                                <input type="text" id="dir-opt-correct" placeholder="✅ الخيار الصحيح تماماً" class="p-2.5 rounded-xl border border-green-200 bg-green-50/50 text-xs font-bold text-green-700">
                             </div>
-                            <textarea id="bulk-lesson-input" rows="5" placeholder="الصق محتوى الدرس هنا..." class="w-full p-3.5 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono text-xs bg-white"></textarea>
-                            <button onclick="processBulkLessonImport()" class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-bold text-xs hover:bg-indigo-700 transition shadow-md shadow-indigo-100">حفظ وإضافة للسحابة</button>
+                            <button onclick="addDirectQuestion()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs hover:bg-emerald-700 transition shadow-sm">حفظ وإضافة السؤال للسحابة</button>
+                        </div>
+
+                        <div id="admin-import-box" class="hidden space-y-3 border-b border-slate-100 pb-4">
+                            <h3 class="font-bold text-amber-700 text-xs">📥 أو استيراد جماعي باللصق</h3>
+                            <p class="text-[11px] text-slate-500 leading-relaxed bg-amber-50/50 p-2.5 rounded-xl border border-amber-100">
+                                صيغة: <code class="text-indigo-600 font-mono">السؤال: خطأ1 / خطأ2 / الإجابة الصحيحة</code>
+                            </p>
+                            <textarea id="bulk-lesson-input" rows="3" placeholder="الصق الأسئلة هنا..." class="w-full p-3 rounded-2xl border border-slate-200 text-xs font-mono bg-white"></textarea>
+                            <button onclick="processBulkLessonImport()" class="w-full bg-indigo-600 text-white py-2.5 rounded-2xl font-bold text-xs hover:bg-indigo-700">استيراد دفعة واحدة</button>
                         </div>
                         
                         <div>
-                            <h4 class="font-bold text-slate-700 text-xs mb-2">عناصر الدرس الحالية (<span id="lesson-items-count">0</span>)</h4>
+                            <h4 class="font-bold text-slate-700 text-xs mb-2">الأسئلة الحالية في الدرس (<span id="lesson-items-count">0</span>)</h4>
                             <div id="lesson-items-preview" class="space-y-2 max-h-64 overflow-y-auto pr-1"></div>
                         </div>
                     </div>
 
-                    <div id="lesson-tab-flashcards" class="hidden text-center space-y-4">
-                        <div id="flashcard-box"></div>
-                    </div>
-
+                    <!-- تبويب تشغيل الاختبار -->
                     <div id="lesson-tab-mcq" class="hidden space-y-4">
                         <div id="mcq-box"></div>
                     </div>
@@ -182,8 +180,6 @@
 
         window.db = { subjects: [], examsHistory: JSON.parse(localStorage.getItem('tamayouz_exams_history')) || [] };
         window.currentSubId = null; window.currentResId = null; window.currentLessId = null;
-        
-        // التحقق من حالة المدير وتحديثها تلقائياً
         window.isAdmin = localStorage.getItem('tamayouz_is_admin') === 'true';
 
         window.toggleAdminMode = function() {
@@ -191,7 +187,6 @@
                 if(confirm('هل تريد تسجيل الخروج من وضع المدير؟')) {
                     window.isAdmin = false;
                     localStorage.setItem('tamayouz_is_admin', 'false');
-                    alert('تم تسجيل الخروج من وضع المدير.');
                     location.reload();
                 }
             } else {
@@ -199,7 +194,7 @@
                 if (pass === '2026') {
                     window.isAdmin = true;
                     localStorage.setItem('tamayouz_is_admin', 'true');
-                    alert('مرحباً بك أيها المدير! تم تفعيل وضع التعديل بنجاح.');
+                    alert('مرحباً بك أيها المدير!');
                     updateAdminUI();
                     renderSubjects();
                 } else if (pass !== null) {
@@ -216,6 +211,7 @@
                 document.getElementById('admin-add-subject-box')?.classList.remove('hidden');
                 document.getElementById('admin-add-research-box')?.classList.remove('hidden');
                 document.getElementById('admin-add-lesson-box')?.classList.remove('hidden');
+                document.getElementById('admin-add-question-direct')?.classList.remove('hidden');
                 document.getElementById('admin-import-box')?.classList.remove('hidden');
             } else {
                 btn.innerText = "🔒";
@@ -223,6 +219,7 @@
                 document.getElementById('admin-add-subject-box')?.classList.add('hidden');
                 document.getElementById('admin-add-research-box')?.classList.add('hidden');
                 document.getElementById('admin-add-lesson-box')?.classList.add('hidden');
+                document.getElementById('admin-add-question-direct')?.classList.add('hidden');
                 document.getElementById('admin-import-box')?.classList.add('hidden');
             }
         }
@@ -239,7 +236,6 @@
                 updateAdminUI();
             } catch (err) {
                 console.error("خطأ في جلب البيانات:", err);
-                document.getElementById('subjects-list').innerHTML = `<div class="text-center py-6 text-red-400 text-xs">تعذر الاتصال بالسحابة. تحقق من قواعد الـ Firebase Rules.</div>`;
             }
         }
 
@@ -270,41 +266,33 @@
         window.renderSubjects = function() {
             const list = document.getElementById('subjects-list');
             if(window.db.subjects.length === 0) {
-                list.innerHTML = `<div class="text-center py-8 text-slate-400 glass-card rounded-3xl border border-slate-100 text-xs">لا توجد مواد مضافة في السحابة بعد.</div>`;
+                list.innerHTML = `<div class="text-center py-8 text-slate-400 glass-card rounded-3xl text-xs">لا توجد مواد مضافة بعد.</div>`;
                 return;
             }
             list.innerHTML = window.db.subjects.map(s => `
-                <div onclick="openSubject('${s.id}')" class="glass-card p-4 rounded-3xl shadow-sm border border-slate-100 flex justify-between items-center cursor-pointer hover:border-indigo-300 transition group">
+                <div onclick="openSubject('${s.id}')" class="glass-card p-4 rounded-3xl shadow-sm border border-slate-100 flex justify-between items-center cursor-pointer hover:border-indigo-300 transition">
                     <div>
-                        <h3 class="font-bold text-slate-800 text-xs group-hover:text-indigo-600 transition">${s.name}</h3>
+                        <h3 class="font-bold text-slate-800 text-xs">${s.name}</h3>
                         <p class="text-[10px] text-slate-400 mt-0.5">${(s.researches || []).length} أبحاث</p>
                     </div>
-                    ${window.isAdmin ? `<button onclick="event.stopPropagation(); deleteSubject('${s.id}')" class="text-slate-300 hover:text-red-500 p-2 text-xs transition">🗑️</button>` : ''}
+                    ${window.isAdmin ? `<button onclick="event.stopPropagation(); deleteSubject('${s.id}')" class="text-slate-300 hover:text-red-500 p-2 text-xs">🗑️</button>` : ''}
                 </div>
             `).join('');
         }
 
         window.addSubject = async function() {
-            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
+            if(!window.isAdmin) return;
             const inp = document.getElementById('subject-name-input');
             if(!inp.value.trim()) return alert('أدخل اسم المادة');
             const subId = 'sub_' + Date.now();
-            const newSub = { name: inp.value.trim(), researches: [] };
-            
-            try {
-                await setDoc(doc(dbFirestore, "subjects", subId), newSub);
-                inp.value = '';
-                await fetchCloudData();
-                alert('تمت إضافة المادة بنجاح!');
-            } catch(e) {
-                alert('حدث خطأ أثناء الحفظ بالسحابة. تأكد من اتصال الإنترنت وقواعد الـ Firebase.');
-                console.error(e);
-            }
+            await setDoc(doc(dbFirestore, "subjects", subId), { name: inp.value.trim(), researches: [] });
+            inp.value = '';
+            await fetchCloudData();
         }
 
         window.deleteSubject = async function(id) {
-            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
-            if(confirm('حذف المادة من السحابة؟')) {
+            if(!window.isAdmin) return;
+            if(confirm('حذف المادة نهائياً؟')) {
                 await deleteDoc(doc(dbFirestore, "subjects", id));
                 await fetchCloudData();
             }
@@ -328,7 +316,7 @@
             const sub = window.db.subjects.find(s => s.id === window.currentSubId);
             const list = document.getElementById('researches-list');
             if(!sub || !sub.researches || sub.researches.length === 0) {
-                list.innerHTML = `<div class="text-center py-6 text-slate-400 glass-card rounded-3xl border border-slate-100 text-xs">لا توجد أبحاث بعد.</div>`;
+                list.innerHTML = `<div class="text-center py-6 text-slate-400 glass-card rounded-3xl text-xs">لا توجد أبحاث بعد.</div>`;
                 return;
             }
             list.innerHTML = sub.researches.map(r => `
@@ -343,13 +331,12 @@
         }
 
         window.addResearch = async function() {
-            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
+            if(!window.isAdmin) return;
             const inp = document.getElementById('research-name-input');
             if(!inp.value.trim()) return alert('أدخل اسم البحث');
             const sub = window.db.subjects.find(s => s.id === window.currentSubId);
             if(!sub.researches) sub.researches = [];
             sub.researches.push({ id: 'res_' + Date.now(), name: inp.value.trim(), lessons: [] });
-            
             await setDoc(doc(dbFirestore, "subjects", window.currentSubId), sub);
             inp.value = '';
             await fetchCloudData();
@@ -357,7 +344,7 @@
         }
 
         window.deleteResearch = async function(id) {
-            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
+            if(!window.isAdmin) return;
             const sub = window.db.subjects.find(s => s.id === window.currentSubId);
             sub.researches = sub.researches.filter(r => r.id !== id);
             await setDoc(doc(dbFirestore, "subjects", window.currentSubId), sub);
@@ -385,14 +372,14 @@
             const res = sub.researches.find(r => r.id === window.currentResId);
             const list = document.getElementById('lessons-list');
             if(!res || !res.lessons || res.lessons.length === 0) {
-                list.innerHTML = `<div class="text-center py-6 text-slate-400 glass-card rounded-3xl border border-slate-100 text-xs">لا توجد دروس بعد.</div>`;
+                list.innerHTML = `<div class="text-center py-6 text-slate-400 glass-card rounded-3xl text-xs">لا توجد دروس بعد.</div>`;
                 return;
             }
             list.innerHTML = res.lessons.map(l => `
                 <div onclick="openLesson('${l.id}')" class="glass-card p-4 rounded-3xl shadow-sm border border-slate-100 flex justify-between items-center cursor-pointer hover:border-indigo-300 transition">
                     <div>
                         <h3 class="font-bold text-slate-800 text-xs">${l.name}</h3>
-                        <p class="text-[10px] text-slate-400 mt-0.5">${(l.items || []).length} عنصر</p>
+                        <p class="text-[10px] text-slate-400 mt-0.5">${(l.items || []).length} سؤالاً</p>
                     </div>
                     ${window.isAdmin ? `<button onclick="event.stopPropagation(); deleteLesson('${l.id}')" class="text-slate-300 hover:text-red-500 p-2 text-xs">🗑️</button>` : ''}
                 </div>
@@ -400,14 +387,13 @@
         }
 
         window.addLesson = async function() {
-            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
+            if(!window.isAdmin) return;
             const inp = document.getElementById('lesson-name-input');
             if(!inp.value.trim()) return alert('أدخل اسم الدرس');
             const sub = window.db.subjects.find(s => s.id === window.currentSubId);
             const res = sub.researches.find(r => r.id === window.currentResId);
             if(!res.lessons) res.lessons = [];
             res.lessons.push({ id: 'les_' + Date.now(), name: inp.value.trim(), items: [] });
-            
             await setDoc(doc(dbFirestore, "subjects", window.currentSubId), sub);
             inp.value = '';
             await fetchCloudData();
@@ -415,7 +401,7 @@
         }
 
         window.deleteLesson = async function(id) {
-            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
+            if(!window.isAdmin) return;
             const sub = window.db.subjects.find(s => s.id === window.currentSubId);
             const res = sub.researches.find(r => r.id === window.currentResId);
             res.lessons = res.lessons.filter(l => l.id !== id);
@@ -432,7 +418,7 @@
             document.getElementById('current-lesson-title').innerText = les.name;
             document.getElementById('view-lessons').classList.add('hidden');
             document.getElementById('view-lesson-dashboard').classList.remove('hidden');
-            switchLessonTab('import');
+            switchLessonTab('manage');
             updateLessonPreview();
         }
 
@@ -442,19 +428,53 @@
         }
 
         window.switchLessonTab = function(tab) {
-            ['import', 'flashcards', 'mcq'].forEach(t => {
+            ['manage', 'mcq'].forEach(t => {
                 document.getElementById(`lesson-tab-${t}`).classList.add('hidden');
                 document.getElementById(`l-tab-${t}`).className = "py-2.5 rounded-2xl font-bold text-xs transition text-slate-500 hover:bg-slate-50";
             });
             document.getElementById(`lesson-tab-${tab}`).classList.remove('hidden');
             document.getElementById(`l-tab-${tab}`).className = "py-2.5 rounded-2xl font-bold text-xs transition bg-indigo-50 text-indigo-600 shadow-sm";
 
-            if(tab === 'flashcards') initLessonFlashcards();
             if(tab === 'mcq') initLessonMCQ();
         }
 
+        // إضافة سؤال بشكل مباشر وفوري
+        window.addDirectQuestion = async function() {
+            if(!window.isAdmin) return;
+            const qText = document.getElementById('dir-q-text').value.trim();
+            const o1 = document.getElementById('dir-opt-1').value.trim();
+            const o2 = document.getElementById('dir-opt-2').value.trim();
+            const o3 = document.getElementById('dir-opt-3').value.trim();
+            const correct = document.getElementById('dir-opt-correct').value.trim();
+
+            if(!qText || !correct) return alert('يرجى إدخال نص السؤال والإجابة الصحيحة على الأقل!');
+
+            let options = [o1, o2, o3, correct].filter(Boolean);
+            if(options.length < 2) return alert('أدخل خيارين على الأقل!');
+
+            const sub = window.db.subjects.find(s => s.id === window.currentSubId);
+            const res = sub.researches.find(r => r.id === window.currentResId);
+            const les = res.lessons.find(l => l.id === window.currentLessId);
+            if(!les.items) les.items = [];
+
+            les.items.push({ type: 'mcq', question: qText, options: options, correct: correct });
+
+            await setDoc(doc(dbFirestore, "subjects", window.currentSubId), sub);
+            
+            // تفريغ الحقول
+            document.getElementById('dir-q-text').value = '';
+            document.getElementById('dir-opt-1').value = '';
+            document.getElementById('dir-opt-2').value = '';
+            document.getElementById('dir-opt-3').value = '';
+            document.getElementById('dir-opt-correct').value = '';
+
+            await fetchCloudData();
+            window.openLesson(window.currentLessId);
+            alert('تمت إضافة السؤال بنجاح إلى السحابة!');
+        }
+
         window.processBulkLessonImport = async function() {
-            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
+            if(!window.isAdmin) return;
             const text = document.getElementById('bulk-lesson-input').value.trim();
             if(!text) return alert('أدخل النصوص أولاً');
             const sub = window.db.subjects.find(s => s.id === window.currentSubId);
@@ -467,22 +487,16 @@
 
             lines.forEach(line => {
                 const l = line.trim();
-                if(!l) return;
-                if(l.includes('|') && !l.includes(':')) {
-                    const parts = l.split('|');
-                    les.items.push({ type: 'flashcard', front: parts[0].trim(), back: parts[1].trim() });
-                    added++;
-                } else if(l.includes(':') && l.includes('/')) {
-                    const mainSplit = l.split(':');
-                    const qText = mainSplit[0].trim();
-                    const optionsPart = mainSplit.slice(1).join(':').trim();
-                    const rawOpts = optionsPart.split('/').map(o => o.trim());
+                if(!l || !l.includes(':')) return;
+                const mainSplit = l.split(':');
+                const qText = mainSplit[0].trim();
+                const optionsPart = mainSplit.slice(1).join(':').trim();
+                const rawOpts = optionsPart.split('/').map(o => o.trim());
 
-                    if(rawOpts.length >= 2) {
-                        const correctOpt = rawOpts[rawOpts.length - 1];
-                        les.items.push({ type: 'mcq', question: qText, options: rawOpts, correct: correctOpt });
-                        added++;
-                    }
+                if(rawOpts.length >= 2) {
+                    const correctOpt = rawOpts[rawOpts.length - 1];
+                    les.items.push({ type: 'mcq', question: qText, options: rawOpts, correct: correctOpt });
+                    added++;
                 }
             });
 
@@ -490,7 +504,7 @@
             document.getElementById('bulk-lesson-input').value = '';
             await fetchCloudData();
             window.openLesson(window.currentLessId);
-            alert(`تمت إضافة ${added} عنصر إلى السحابة بنجاح!`);
+            alert(`تمت إضافة ${added} سؤال بنجاح!`);
         }
 
         window.updateLessonPreview = function() {
@@ -501,19 +515,19 @@
             document.getElementById('lesson-items-count').innerText = items.length;
             const list = document.getElementById('lesson-items-preview');
             if(items.length === 0) {
-                list.innerHTML = `<p class="text-[11px] text-slate-400 text-center py-2">لا توجد عناصر.</p>`;
+                list.innerHTML = `<p class="text-[11px] text-slate-400 text-center py-2">لا توجد أسئلة مسجلة.</p>`;
                 return;
             }
             list.innerHTML = items.map((it, i) => `
                 <div class="bg-slate-50/70 p-2.5 rounded-2xl border border-slate-100 flex justify-between items-center text-xs">
-                    <span class="font-bold text-slate-700 truncate max-w-[240px]">${i+1}. ${it.type==='mcq' ? '[اختياري] '+it.question : '[بطاقة] '+it.front}</span>
+                    <span class="font-bold text-slate-700 truncate max-w-[240px]">${i+1}. ${it.question}</span>
                     ${window.isAdmin ? `<button onclick="deleteLessonItem(${i})" class="text-slate-300 hover:text-red-500">حذف</button>` : ''}
                 </div>
             `).join('');
         }
 
         window.deleteLessonItem = async function(idx) {
-            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
+            if(!window.isAdmin) return;
             const sub = window.db.subjects.find(s => s.id === window.currentSubId);
             const res = sub.researches.find(r => r.id === window.currentResId);
             const les = res.lessons.find(l => l.id === window.currentLessId);
@@ -523,51 +537,16 @@
             window.openLesson(window.currentLessId);
         }
 
-        let fcIndex = 0;
-        window.initLessonFlashcards = function() {
-            const sub = window.db.subjects.find(s => s.id === window.currentSubId);
-            const res = sub.researches.find(r => r.id === window.currentResId);
-            const les = res.lessons.find(l => l.id === window.currentLessId);
-            const cards = (les.items || []).filter(i => i.type === 'flashcard');
-            const box = document.getElementById('flashcard-box');
-
-            if(cards.length === 0) {
-                box.innerHTML = `<p class="text-xs text-slate-400 py-6">لا توجد بطاقات تعليمية.</p>`;
-                return;
-            }
-            if(fcIndex >= cards.length) fcIndex = 0;
-            const c = cards[fcIndex];
-
-            box.innerHTML = `
-                <div class="space-y-3">
-                    <div class="text-[11px] text-slate-400 font-bold">بطاقة ${fcIndex+1} من ${cards.length}</div>
-                    <div onclick="this.classList.toggle('flipped')" class="flashcard w-full h-44 cursor-pointer">
-                        <div class="flashcard-inner relative w-full h-full rounded-3xl shadow-sm border border-slate-100">
-                            <div class="flashcard-front absolute inset-0 bg-indigo-50/80 backdrop-blur rounded-3xl flex flex-col items-center justify-center p-4 text-center">
-                                <span class="text-[10px] text-indigo-400 font-bold mb-1">السؤال (اضغط للقلب)</span>
-                                <h4 class="text-xs font-bold text-slate-800">${c.front}</h4>
-                            </div>
-                            <div class="flashcard-back absolute inset-0 bg-emerald-50/80 backdrop-blur rounded-3xl flex flex-col items-center justify-center p-4 text-center">
-                                <span class="text-[10px] text-emerald-500 font-bold mb-1">الجواب</span>
-                                <h4 class="text-xs font-bold text-slate-800">${c.back}</h4>
-                            </div>
-                        </div>
-                    </div>
-                    <button onclick="fcIndex++; initLessonFlashcards();" class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-bold text-xs hover:bg-indigo-700 transition">البطاقة التالية 🔄</button>
-                </div>
-            `;
-        }
-
         let mcqIndex = 0, currentScore = 0, currentQuizItems = [];
         window.initLessonMCQ = function() {
             const sub = window.db.subjects.find(s => s.id === window.currentSubId);
             const res = sub.researches.find(r => r.id === window.currentResId);
             const les = res.lessons.find(l => l.id === window.currentLessId);
-            currentQuizItems = (les.items || []).filter(i => i.type === 'mcq');
+            currentQuizItems = les.items || [];
             const box = document.getElementById('mcq-box');
 
             if(currentQuizItems.length === 0) {
-                box.innerHTML = `<p class="text-xs text-slate-400 py-6">لا توجد أسئلة اختيارية.</p>`;
+                box.innerHTML = `<p class="text-xs text-slate-400 py-6 text-center">لا توجد أسئلة اختبار متاحة لهذا الدرس بعد.</p>`;
                 return;
             }
             mcqIndex = 0; currentScore = 0;
@@ -587,9 +566,9 @@
 
                 box.innerHTML = `
                     <div class="text-center py-6 space-y-3">
-                        <h3 class="text-sm font-black text-slate-800">🎉 انتهى الاختبار!</h3>
-                        <p class="text-xs text-slate-600">نتيجتك: <span class="font-bold text-indigo-600">${currentScore} / ${currentQuizItems.length}</span> (${finalPct}%)</p>
-                        <button onclick="initLessonMCQ()" class="bg-indigo-600 text-white px-5 py-2.5 rounded-2xl text-xs font-bold shadow-md shadow-indigo-100">إعادة الاختبار</button>
+                        <h3 class="text-sm font-black text-slate-800">🎉 انتهى الاختبار بنجاح!</h3>
+                        <p class="text-xs text-slate-600">نتيجتك النهائية: <span class="font-bold text-indigo-600">${currentScore} / ${currentQuizItems.length}</span> (${finalPct}%)</p>
+                        <button onclick="initLessonMCQ()" class="bg-indigo-600 text-white px-5 py-2.5 rounded-2xl text-xs font-bold shadow-md shadow-indigo-100">إعادة الاختبار 🔄</button>
                     </div>
                 `;
                 return;
@@ -603,549 +582,7 @@
                     <div class="flex justify-between text-[11px] text-slate-400 font-bold">
                         <span>السؤال ${mcqIndex+1} من ${currentQuizItems.length}</span>
                     </div>
-                    <h3 class="text-xs font-bold text-slate-800">${q.question}</h3>
-                    <div class="space-y-2">
-                        ${shuffledOpts.map(opt => `
-                            <button onclick="checkMCQAnswer('${opt.replace(/'/g, "\\'")}', '${q.correct.replace(/'/g, "\\'")}', this)" class="w-full text-right p-3 rounded-2xl border border-slate-200 hover:bg-indigo-50 text-xs font-medium text-slate-700 transition bg-slate-50/50">${opt}</button>
-                        `).join('')}
-                    </div>
-                    <div id="mcq-ans-feedback" class="text-center text-xs font-bold"></div>
-                    <button onclick="mcqIndex++; renderMCQQuestion();" id="next-q-btn" class="hidden w-full bg-slate-800 text-white py-2.5 rounded-2xl text-xs font-bold">السؤال التالي ←</button>
-                </div>
-            `;
-        }
-
-        window.checkMCQAnswer = function(selected, correct, btn) {
-            const buttons = btn.parentElement.querySelectorAll('button');
-            buttons.forEach(b => b.disabled = true);
-
-            if(selected === correct) {
-                btn.className = "w-full text-right p-3 rounded-2xl border border-green-300 bg-green-50 text-green-700 text-xs font-bold";
-                document.getElementById('mcq-ans-feedback').innerHTML = `<span class="text-green-600">إجابة صحيحة! 🌟</span>`;
-                currentScore++;
-            } else {
-                btn.className = "w-full text-right p-3 rounded-2xl border border-red-300 bg-red-50 text-red-700 text-xs font-bold";
-                buttons.forEach(b => { if(b.innerText === correct) b.className = "w-full text-right p-3 rounded-2xl border border-green-300 bg-green-50 text-green-700 text-xs font-bold"; });
-                document.getElementById('mcq-ans-feedback').innerHTML = `<span class="text-red-500">إجابة خاطئة.</span>`;
-            }
-            document.getElementById('next-q-btn').classList.remove('hidden');
-        }
-
-        window.renderProgressDashboard = function() {
-            let totalLessons = 0, completedExamsCount = window.db.examsHistory.length;
-            let totalScoreSum = 0;
-
-            window.db.subjects.forEach(s => { (s.researches || []).forEach(r => { totalLessons += (r.lessons || []).length; }); });
-            window.db.examsHistory.forEach(e => totalScoreSum += e.score);
-            let avgScore = completedExamsCount > 0 ? Math.round(totalScoreSum / completedExamsCount) : 0;
-            let completionPct = totalLessons > 0 ? Math.min(100, Math.round((completedExamsCount / (totalLessons || 1)) * 100)) : 0;
-
-            document.getElementById('stat-completion').innerText = completionPct + '%';
-            document.getElementById('stat-avg-score').innerText = avgScore + '%';
-
-            const histList = document.getElementById('exams-history-list');
-            if(window.db.examsHistory.length === 0) {
-                histList.innerHTML = `<p class="text-[11px] text-slate-400 text-center py-4">لا توجد اختبارات مسجلة بعد.</p>`;
-                return;
-            }
-
-            histList.innerHTML = window.db.examsHistory.slice().reverse().map(ex => `
-                <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 flex justify-between items-center text-xs">
-                    <div>
-                        <h4 class="font-bold text-slate-800 text-xs">${ex.lesson}</h4>
-                        <span class="text-[10px] text-slate-400">${ex.date}</span>
-                    </div>
-                    <span class="font-black px-2.5 py-1 rounded-xl text-[11px] ${ex.score >= 50 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">${ex.score}%</span>
-                </div>
-            `).join('');
-        }
-
-        // تشغيل الجلب عند التحميل
-        fetchCloudData();
-    </script>
-</body>
-</html>
-                    <!-- تبويب المحتوى (الاستيراد للمدير، والمعاينة للجميع) -->
-                    <div id="lesson-tab-import" class="space-y-4">
-                        <div id="admin-import-box" class="hidden space-y-4 border-b border-slate-100 pb-4">
-                            <div>
-                                <h3 class="font-bold text-amber-700 text-xs mb-1">🔒 استيراد الأسئلة والبطاقات (للمدير فقط)</h3>
-                                <p class="text-[11px] text-slate-500 leading-relaxed bg-amber-50/50 p-3 rounded-2xl border border-amber-100">
-                                    • بطاقة: <code class="text-indigo-600 font-mono">السؤال؟ | الجواب.</code><br>
-                                    • اختياري: <code class="text-indigo-600 font-mono">السؤال: خيار خطأ / خيار خطأ / الإجابة الصحيحة</code>
-                                </p>
-                            </div>
-                            <textarea id="bulk-lesson-input" rows="5" placeholder="الصق محتوى الدرس هنا..." class="w-full p-3.5 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono text-xs bg-white"></textarea>
-                            <button onclick="processBulkLessonImport()" class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-bold text-xs hover:bg-indigo-700 transition shadow-md shadow-indigo-100">حفظ وإضافة للسحابة</button>
-                        </div>
-                        
-                        <div>
-                            <h4 class="font-bold text-slate-700 text-xs mb-2">عناصر الدرس الحالية (<span id="lesson-items-count">0</span>)</h4>
-                            <div id="lesson-items-preview" class="space-y-2 max-h-64 overflow-y-auto pr-1"></div>
-                        </div>
-                    </div>
-
-                    <div id="lesson-tab-flashcards" class="hidden text-center space-y-4">
-                        <div id="flashcard-box"></div>
-                    </div>
-
-                    <div id="lesson-tab-mcq" class="hidden space-y-4">
-                        <div id="mcq-box"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- قسم التقدم (محلي خاص بالطالب) -->
-        <div id="view-progress" class="hidden space-y-4">
-            <div class="glass-card p-5 rounded-3xl shadow-sm border border-slate-100 space-y-4">
-                <h2 class="text-sm font-black text-slate-800">📊 لوحة التقدم والدرجات الخاصة بك</h2>
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-indigo-50/70 border border-indigo-100 p-4 rounded-2xl text-center">
-                        <span class="text-[10px] text-indigo-500 font-bold">النسبة العامة</span>
-                        <h3 id="stat-completion" class="text-xl font-black text-indigo-700 mt-1">0%</h3>
-                    </div>
-                    <div class="bg-emerald-50/70 border border-emerald-100 p-4 rounded-2xl text-center">
-                        <span class="text-[10px] text-emerald-500 font-bold">متوسط الدرجات</span>
-                        <h3 id="stat-avg-score" class="text-xl font-black text-emerald-700 mt-1">0%</h3>
-                    </div>
-                </div>
-            </div>
-
-            <div class="glass-card p-5 rounded-3xl shadow-sm border border-slate-100 space-y-3">
-                <h3 class="font-bold text-slate-800 text-xs">📝 سجل الامتحانات السابقة</h3>
-                <div id="exams-history-list" class="space-y-2 max-h-64 overflow-y-auto"></div>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- Firebase SDK (Version 10) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBEa14tz0eJqDNqdCCA9W40p_wkiD3Y_qk",
-            authDomain: "tamayoz-app-ff2d9.firebaseapp.com",
-            projectId: "tamayoz-app-ff2d9",
-            storageBucket: "tamayoz-app-ff2d9.firebasestorage.app",
-            messagingSenderId: "424671252834",
-            appId: "1:424671252834:web:42eee03232b242af6f1c3b",
-            measurementId: "G-QYW0F9BB1N"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const dbFirestore = getFirestore(app);
-
-        window.db = { subjects: [], examsHistory: JSON.parse(localStorage.getItem('tamayouz_exams_history')) || [] };
-        window.currentSubId = null; window.currentResId = null; window.currentLessId = null;
-        
-        // نظام حالة المدير (كلمة المرور الافتتاحية: 2026 - يمكنك تغييرها هنا)
-        window.isAdmin = localStorage.getItem('tamayouz_is_admin') === 'true';
-
-        window.toggleAdminMode = function() {
-            if (window.isAdmin) {
-                if(confirm('هل تريد تسجيل الخروج من وضع المدير؟')) {
-                    window.isAdmin = false;
-                    localStorage.setItem('tamayouz_is_admin', 'false');
-                    alert('تم تسجيل الخروج من وضع المدير.');
-                    location.reload();
-                }
-            } else {
-                const pass = prompt('أدخل كلمة مرور المدير:');
-                if (pass === '2026') { // كلمة المرور الخاصة بك
-                    window.isAdmin = true;
-                    localStorage.setItem('tamayouz_is_admin', 'true');
-                    alert('مرحباً بك أيها المدير! تم تفعيل وضع التعديل.');
-                    location.reload();
-                } else if (pass !== null) {
-                    alert('كلمة المرور غير صحيحة!');
-                }
-            }
-        }
-
-        function updateAdminUI() {
-            const btn = document.getElementById('admin-toggle-btn');
-            if(window.isAdmin) {
-                btn.innerText = "🔓";
-                btn.className = "bg-emerald-500 text-white p-2 rounded-xl text-xs font-bold transition shadow-md";
-                document.getElementById('admin-add-subject-box')?.classList.remove('hidden');
-                document.getElementById('admin-add-research-box')?.classList.remove('hidden');
-                document.getElementById('admin-add-lesson-box')?.classList.remove('hidden');
-                document.getElementById('admin-import-box')?.classList.remove('hidden');
-            } else {
-                btn.innerText = "🔒";
-                btn.className = "bg-white/20 hover:bg-white/30 p-2 rounded-xl text-xs font-bold transition";
-                document.getElementById('admin-add-subject-box')?.classList.add('hidden');
-                document.getElementById('admin-add-research-box')?.classList.add('hidden');
-                document.getElementById('admin-add-lesson-box')?.classList.add('hidden');
-                document.getElementById('admin-import-box')?.classList.add('hidden');
-            }
-        }
-
-        async function fetchCloudData() {
-            try {
-                const querySnapshot = await getDocs(collection(dbFirestore, "subjects"));
-                let loadedSubjects = [];
-                querySnapshot.forEach((docSnap) => {
-                    loadedSubjects.push({ id: docSnap.id, ...docSnap.data() });
-                });
-                window.db.subjects = loadedSubjects;
-                renderSubjects();
-                updateAdminUI();
-            } catch (err) {
-                console.error("خطأ في جلب البيانات:", err);
-                document.getElementById('subjects-list').innerHTML = `<div class="text-center py-6 text-red-400 text-xs">تأكد من إعدادات الاتصال بـ Firebase</div>`;
-            }
-        }
-
-        window.saveExamsHistory = function() {
-            localStorage.setItem('tamayouz_exams_history', JSON.stringify(window.db.examsHistory));
-        }
-
-        window.goHome = function() {
-            window.currentSubId = null; window.currentResId = null; window.currentLessId = null;
-            document.getElementById('view-progress').classList.add('hidden');
-            document.getElementById('view-main-container').classList.remove('hidden');
-            document.getElementById('view-subjects').classList.remove('hidden');
-            document.getElementById('view-researches').classList.add('hidden');
-            document.getElementById('view-lessons').classList.add('hidden');
-            document.getElementById('view-lesson-dashboard').classList.add('hidden');
-            renderSubjects();
-        }
-
-        window.switchMainView = function(view) {
-            if(view === 'subjects') { window.goHome(); }
-            else if(view === 'progress') {
-                document.getElementById('view-main-container').classList.add('hidden');
-                document.getElementById('view-progress').classList.remove('hidden');
-                renderProgressDashboard();
-            }
-        }
-
-        window.renderSubjects = function() {
-            const list = document.getElementById('subjects-list');
-            if(window.db.subjects.length === 0) {
-                list.innerHTML = `<div class="text-center py-8 text-slate-400 glass-card rounded-3xl border border-slate-100 text-xs">لا توجد مواد مضافة في السحابة بعد.</div>`;
-                return;
-            }
-            list.innerHTML = window.db.subjects.map(s => `
-                <div onclick="openSubject('${s.id}')" class="glass-card p-4 rounded-3xl shadow-sm border border-slate-100 flex justify-between items-center cursor-pointer hover:border-indigo-300 transition group">
-                    <div>
-                        <h3 class="font-bold text-slate-800 text-xs group-hover:text-indigo-600 transition">${s.name}</h3>
-                        <p class="text-[10px] text-slate-400 mt-0.5">${(s.researches || []).length} أبحاث</p>
-                    </div>
-                    ${window.isAdmin ? `<button onclick="event.stopPropagation(); deleteSubject('${s.id}')" class="text-slate-300 hover:text-red-500 p-2 text-xs transition">🗑️</button>` : ''}
-                </div>
-            `).join('');
-        }
-
-        window.addSubject = async function() {
-            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
-            const inp = document.getElementById('subject-name-input');
-            if(!inp.value.trim()) return alert('أدخل اسم المادة');
-            const subId = 'sub_' + Date.now();
-            const newSub = { name: inp.value.trim(), researches: [] };
-            
-            await setDoc(doc(dbFirestore, "subjects", subId), newSub);
-            inp.value = '';
-            await fetchCloudData();
-        }
-
-        window.deleteSubject = async function(id) {
-            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
-            if(confirm('حذف المادة من السحابة؟')) {
-                await deleteDoc(doc(dbFirestore, "subjects", id));
-                await fetchCloudData();
-            }
-        }
-
-        window.openSubject = function(id) {
-            window.currentSubId = id;
-            const sub = window.db.subjects.find(s => s.id === id);
-            document.getElementById('current-subject-title').innerText = sub.name;
-            document.getElementById('view-subjects').classList.add('hidden');
-            document.getElementById('view-researches').classList.remove('hidden');
-            renderResearches();
-        }
-
-        window.goBackToSubjects = function() { window.openSubject(window.currentSubId); document.getElementById('view-researches').classList.remove('hidden'); document.getElementById('view-lessons').classList.add('hidden'); }
-
-        window.renderResearches = function() {
-            const sub = window.db.subjects.find(s => s.id === window.currentSubId);
-            const list = document.getElementById('researches-list');
-            if(!sub.researches || sub.researches.length === 0) {
-                list.innerHTML = `<div class="text-center py-6 text-slate-400 glass-card rounded-3xl border border-slate-100 text-xs">لا توجد أبحاث بعد.</div>`;
-                return;
-            }
-            list.innerHTML = sub.researches.map(r => `
-                <div onclick="openResearch('${r.id}')" class="glass-card p-4 rounded-3xl shadow-sm border border-slate-100 flex justify-between items-center cursor-pointer hover:border-indigo-300 transition">
-                    <div>
-                        <h3 class="font-bold text-slate-800 text-xs">${r.name}</h3>
-                        <p class="text-[10px] text-slate-400 mt-0.5">${(r.lessons || []).length} دروس</p>
-                    </div>
-                    ${window.isAdmin ? `<button onclick="event.stopPropagation(); deleteResearch('${r.id}')" class="text-slate-300 hover:text-red-500 p-2 text-xs">🗑️</button>` : ''}
-                </div>
-            `).join('');
-        }
-
-        window.addResearch = async function() {
-            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
-            const inp = document.getElementById('research-name-input');
-            if(!inp.value.trim()) return alert('أدخل اسم البحث');
-            const sub = window.db.subjects.find(s => s.id === window.currentSubId);
-            if(!sub.researches) sub.researches = [];
-            sub.researches.push({ id: 'res_' + Date.now(), name: inp.value.trim(), lessons: [] });
-            
-            await setDoc(doc(dbFirestore, "subjects", window.currentSubId), sub);
-            inp.value = '';
-            await fetchCloudData();
-            window.openSubject(window.currentSubId);
-        }
-
-        window.deleteResearch = async function(id) {
-            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
-            const sub = window.db.subjects.find(s => s.id === window.currentSubId);
-            sub.researches = sub.researches.filter(r => r.id !== id);
-            await setDoc(doc(dbFirestore, "subjects", window.currentSubId), sub);
-            await fetchCloudData();
-            window.openSubject(window.currentSubId);
-        }
-
-        window.openResearch = function(id) {
-            window.currentResId = id;
-            const sub = window.db.subjects.find(s => s.id === window.currentSubId);
-            const res = sub.researches.find(r => r.id === id);
-            document.getElementById('current-research-title').innerText = res.name;
-            document.getElementById('view-researches').classList.add('hidden');
-            document.getElementById('view-lessons').classList.remove('hidden');
-            renderLessons();
-        }
-
-        window.goBackToResearches = function() { window.openResearch(window.currentResId); document.getElementById('view-lesson-dashboard').classList.add('hidden'); document.getElementById('view-lessons').classList.remove('hidden'); }
-
-        window.renderLessons = function() {
-            const sub = window.db.subjects.find(s => s.id === window.currentSubId);
-            const res = sub.researches.find(r => r.id === window.currentResId);
-            const list = document.getElementById('lessons-list');
-            if(!res.lessons || res.lessons.length === 0) {
-                list.innerHTML = `<div class="text-center py-6 text-slate-400 glass-card rounded-3xl border border-slate-100 text-xs">لا توجد دروس بعد.</div>`;
-                return;
-            }
-            list.innerHTML = res.lessons.map(l => `
-                <div onclick="openLesson('${l.id}')" class="glass-card p-4 rounded-3xl shadow-sm border border-slate-100 flex justify-between items-center cursor-pointer hover:border-indigo-300 transition">
-                    <div>
-                        <h3 class="font-bold text-slate-800 text-xs">${l.name}</h3>
-                        <p class="text-[10px] text-slate-400 mt-0.5">${(l.items || []).length} عنصر</p>
-                    </div>
-                    ${window.isAdmin ? `<button onclick="event.stopPropagation(); deleteLesson('${l.id}')" class="text-slate-300 hover:text-red-500 p-2 text-xs">🗑️</button>` : ''}
-                </div>
-            `).join('');
-        }
-
-        window.addLesson = async function() {
-            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
-            const inp = document.getElementById('lesson-name-input');
-            if(!inp.value.trim()) return alert('أدخل اسم الدرس');
-            const sub = window.db.subjects.find(s => s.id === window.currentSubId);
-            const res = sub.researches.find(r => r.id === window.currentResId);
-            if(!res.lessons) res.lessons = [];
-            res.lessons.push({ id: 'les_' + Date.now(), name: inp.value.trim(), items: [] });
-            
-            await setDoc(doc(dbFirestore, "subjects", window.currentSubId), sub);
-            inp.value = '';
-            await fetchCloudData();
-            window.openResearch(window.currentResId);
-        }
-
-        window.deleteLesson = async function(id) {
-            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
-            const sub = window.db.subjects.find(s => s.id === window.currentSubId);
-            const res = sub.researches.find(r => r.id === window.currentResId);
-            res.lessons = res.lessons.filter(l => l.id !== id);
-            await setDoc(doc(dbFirestore, "subjects", window.currentSubId), sub);
-            await fetchCloudData();
-            window.openResearch(window.currentResId);
-        }
-
-        window.openLesson = function(id) {
-            window.currentLessId = id;
-            const sub = window.db.subjects.find(s => s.id === window.currentSubId);
-            const res = sub.researches.find(r => r.id === window.currentResId);
-            const les = res.lessons.find(l => l.id === id);
-            document.getElementById('current-lesson-title').innerText = les.name;
-            document.getElementById('view-lessons').classList.add('hidden');
-            document.getElementById('view-lesson-dashboard').classList.remove('hidden');
-            switchLessonTab('import');
-            updateLessonPreview();
-        }
-
-        window.goBackToLessons = function() { window.openResearch(window.currentResId); document.getElementById('view-lesson-dashboard').classList.add('hidden'); document.getElementById('view-lessons').classList.remove('hidden'); }
-
-        window.switchLessonTab = function(tab) {
-            ['import', 'flashcards', 'mcq'].forEach(t => {
-                document.getElementById(`lesson-tab-${t}`).classList.add('hidden');
-                document.getElementById(`l-tab-${t}`).className = "py-2.5 rounded-2xl font-bold text-xs transition text-slate-500 hover:bg-slate-50";
-            });
-            document.getElementById(`lesson-tab-${tab}`).classList.remove('hidden');
-            document.getElementById(`l-tab-${tab}`).className = "py-2.5 rounded-2xl font-bold text-xs transition bg-indigo-50 text-indigo-600 shadow-sm";
-
-            if(tab === 'flashcards') initLessonFlashcards();
-            if(tab === 'mcq') initLessonMCQ();
-        }
-
-        window.processBulkLessonImport = async function() {
-            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
-            const text = document.getElementById('bulk-lesson-input').value.trim();
-            if(!text) return alert('أدخل النصوص أولاً');
-            const sub = window.db.subjects.find(s => s.id === window.currentSubId);
-            const res = sub.researches.find(r => r.id === window.currentResId);
-            const les = res.lessons.find(l => l.id === window.currentLessId);
-            if(!les.items) les.items = [];
-
-            const lines = text.split('\n');
-            let added = 0;
-
-            lines.forEach(line => {
-                const l = line.trim();
-                if(!l) return;
-                if(l.includes('|') && !l.includes(':')) {
-                    const parts = l.split('|');
-                    les.items.push({ type: 'flashcard', front: parts[0].trim(), back: parts[1].trim() });
-                    added++;
-                } else if(l.includes(':') && l.includes('/')) {
-                    const mainSplit = l.split(':');
-                    const qText = mainSplit[0].trim();
-                    const optionsPart = mainSplit.slice(1).join(':').trim();
-                    const rawOpts = optionsPart.split('/').map(o => o.trim());
-
-                    if(rawOpts.length >= 2) {
-                        const correctOpt = rawOpts[rawOpts.length - 1];
-                        les.items.push({ type: 'mcq', question: qText, options: rawOpts, correct: correctOpt });
-                        added++;
-                    }
-                }
-            });
-
-            await setDoc(doc(dbFirestore, "subjects", window.currentSubId), sub);
-            document.getElementById('bulk-lesson-input').value = '';
-            await fetchCloudData();
-            window.openLesson(window.currentLessId);
-            alert(`تمت إضافة ${added} عنصر إلى السحابة بنجاح!`);
-        }
-
-        window.updateLessonPreview = function() {
-            const sub = window.db.subjects.find(s => s.id === window.currentSubId);
-            const res = sub.researches.find(r => r.id === window.currentResId);
-            const les = res.lessons.find(l => l.id === window.currentLessId);
-            const items = les.items || [];
-            document.getElementById('lesson-items-count').innerText = items.length;
-            const list = document.getElementById('lesson-items-preview');
-            if(items.length === 0) {
-                list.innerHTML = `<p class="text-[11px] text-slate-400 text-center py-2">لا توجد عناصر.</p>`;
-                return;
-            }
-            list.innerHTML = items.map((it, i) => `
-                <div class="bg-slate-50/70 p-2.5 rounded-2xl border border-slate-100 flex justify-between items-center text-xs">
-                    <span class="font-bold text-slate-700 truncate max-w-[240px]">${i+1}. ${it.type==='mcq' ? '[اختياري] '+it.question : '[بطاقة] '+it.front}</span>
-                    ${window.isAdmin ? `<button onclick="deleteLessonItem(${i})" class="text-slate-300 hover:text-red-500">حذف</button>` : ''}
-                </div>
-            `).join('');
-        }
-
-        window.deleteLessonItem = async function(idx) {
-            if(!window.isAdmin) return alert('غير مسموح إلا للمدير');
-            const sub = window.db.subjects.find(s => s.id === window.currentSubId);
-            const res = sub.researches.find(r => r.id === window.currentResId);
-            const les = res.lessons.find(l => l.id === window.currentLessId);
-            les.items.splice(idx, 1);
-            await setDoc(doc(dbFirestore, "subjects", window.currentSubId), sub);
-            await fetchCloudData();
-            window.openLesson(window.currentLessId);
-        }
-
-        let fcIndex = 0;
-        window.initLessonFlashcards = function() {
-            const sub = window.db.subjects.find(s => s.id === window.currentSubId);
-            const res = sub.researches.find(r => r.id === window.currentResId);
-            const les = res.lessons.find(l => l.id === window.currentLessId);
-            const cards = (les.items || []).filter(i => i.type === 'flashcard');
-            const box = document.getElementById('flashcard-box');
-
-            if(cards.length === 0) {
-                box.innerHTML = `<p class="text-xs text-slate-400 py-6">لا توجد بطاقات تعليمية.</p>`;
-                return;
-            }
-            if(fcIndex >= cards.length) fcIndex = 0;
-            const c = cards[fcIndex];
-
-            box.innerHTML = `
-                <div class="space-y-3">
-                    <div class="text-[11px] text-slate-400 font-bold">بطاقة ${fcIndex+1} من ${cards.length}</div>
-                    <div onclick="this.classList.toggle('flipped')" class="flashcard w-full h-44 cursor-pointer">
-                        <div class="flashcard-inner relative w-full h-full rounded-3xl shadow-sm border border-slate-100">
-                            <div class="flashcard-front absolute inset-0 bg-indigo-50/80 backdrop-blur rounded-3xl flex flex-col items-center justify-center p-4 text-center">
-                                <span class="text-[10px] text-indigo-400 font-bold mb-1">السؤال (اضغط للقلب)</span>
-                                <h4 class="text-xs font-bold text-slate-800">${c.front}</h4>
-                            </div>
-                            <div class="flashcard-back absolute inset-0 bg-emerald-50/80 backdrop-blur rounded-3xl flex flex-col items-center justify-center p-4 text-center">
-                                <span class="text-[10px] text-emerald-500 font-bold mb-1">الجواب</span>
-                                <h4 class="text-xs font-bold text-slate-800">${c.back}</h4>
-                            </div>
-                        </div>
-                    </div>
-                    <button onclick="fcIndex++; initLessonFlashcards();" class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-bold text-xs hover:bg-indigo-700 transition">البطاقة التالية 🔄</button>
-                </div>
-            `;
-        }
-
-        let mcqIndex = 0, currentScore = 0, currentQuizItems = [];
-        window.initLessonMCQ = function() {
-            const sub = window.db.subjects.find(s => s.id === window.currentSubId);
-            const res = sub.researches.find(r => r.id === window.currentResId);
-            const les = res.lessons.find(l => l.id === window.currentLessId);
-            currentQuizItems = (les.items || []).filter(i => i.type === 'mcq');
-            const box = document.getElementById('mcq-box');
-
-            if(currentQuizItems.length === 0) {
-                box.innerHTML = `<p class="text-xs text-slate-400 py-6">لا توجد أسئلة اختيارية.</p>`;
-                return;
-            }
-            mcqIndex = 0; currentScore = 0;
-            renderMCQQuestion();
-        }
-
-        window.renderMCQQuestion = function() {
-            const box = document.getElementById('mcq-box');
-            if(mcqIndex >= currentQuizItems.length) {
-                const finalPct = Math.round((currentScore / currentQuizItems.length) * 100);
-                window.db.examsHistory.push({
-                    lesson: document.getElementById('current-lesson-title').innerText,
-                    score: finalPct,
-                    date: new Date().toLocaleDateString('ar-SA')
-                });
-                window.saveExamsHistory();
-
-                box.innerHTML = `
-                    <div class="text-center py-6 space-y-3">
-                        <h3 class="text-sm font-black text-slate-800">🎉 انتهى الاختبار!</h3>
-                        <p class="text-xs text-slate-600">نتيجتك: <span class="font-bold text-indigo-600">${currentScore} / ${currentQuizItems.length}</span> (${finalPct}%)</p>
-                        <button onclick="initLessonMCQ()" class="bg-indigo-600 text-white px-5 py-2.5 rounded-2xl text-xs font-bold shadow-md shadow-indigo-100">إعادة الاختبار</button>
-                    </div>
-                `;
-                return;
-            }
-
-            const q = currentQuizItems[mcqIndex];
-            let shuffledOpts = [...q.options].sort(() => Math.random() - 0.5);
-
-            box.innerHTML = `
-                <div class="space-y-3 text-right">
-                    <div class="flex justify-between text-[11px] text-slate-400 font-bold">
-                        <span>السؤال ${mcqIndex+1} من ${currentQuizItems.length}</span>
-                    </div>
-                    <h3 class="text-xs font-bold text-slate-800">${q.question}</h3>
+                    <h3 class="text-xs font-bold text-slate-800 leading-relaxed">${q.question}</h3>
                     <div class="space-y-2">
                         ${shuffledOpts.map(opt => `
                             <button onclick="checkMCQAnswer('${opt.replace(/'/g, "\\'")}', '${q.correct.replace(/'/g, "\\'")}', this)" class="w-full text-right p-3 rounded-2xl border border-slate-200 hover:bg-indigo-50 text-xs font-medium text-slate-700 transition bg-slate-50/50">${opt}</button>
